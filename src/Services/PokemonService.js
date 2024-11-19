@@ -12,6 +12,10 @@ function getPokemonByIDBis(name) {
   return axios.get("https://pokeapi.co/api/v2/pokemon/"+ name)
 };
 
+function getPokemonByIDBisTwo(name) {
+  return axios.get(" https://pokeapi.co/api/v2/type/"+ name)
+};
+
 export default {
-  getAllPokemon, getPokemonByID, getPokemonByIDBis
-}
+  getAllPokemon, getPokemonByID, getPokemonByIDBis, getPokemonByIDBisTwo
+};

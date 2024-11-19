@@ -2,13 +2,42 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PokemonService from "../Services/PokemonService";
 import { Button, Card, Container, Form } from "react-bootstrap";
+import CanvasJSReact from '@canvasjs/react-charts';
 
 
 
 const DetailPokemon = () => {
     const { name } = useParams();
     const [Pokemon, setPokemon] = useState({});
-
+    var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+    const options = {
+        animationEnabled: true,
+        theme: "dark2",
+        title: {
+            text: "Statistique du Pokemon"
+        },
+        axisY: {
+        title: "Active Installations",
+            scaleBreaks: {
+                autoCalculate: true,
+                type: "wavy",
+                lineColor: "white"
+            }
+        },
+        data: [{
+            type: "column",
+            indexLabel: "{y}",		
+            indexLabelFontColor: "white",
+            dataPoints: [
+                {"label":"hp","y":5000000},
+                {"label":"Jetpack","y":4000000},
+                {"label":"WP Super Cache","y":2000000},
+                {"label":"bbPress","y":300000},
+                {"label":"BuddyPress","y":200000},
+                {"label":"Health Check","y":200000}    
+            ]
+        }]
+    }
 
 
     const fectchPokemonByID = async () => {
@@ -16,11 +45,11 @@ const DetailPokemon = () => {
         try {
             const response = await PokemonService.getPokemonByID(name);
             const responseBis = await PokemonService.getPokemonByIDBis(name);
-          
+            const responseBisTwo = await PokemonService.getPokemonByIDBisTwo(responseBis.data.types[0].type.name);
 
-            setPokemon({...responseBis.data, ...response.data});
-           
-            
+            setPokemon({ ...responseBisTwo.data, ...responseBis.data, ...response.data });
+
+
 
             // console.log(response.data.data[id]);
 
@@ -38,66 +67,96 @@ const DetailPokemon = () => {
 
 
 
-console.log(Pokemon);
+    console.log(Pokemon);
 
-    return <Container className="d-flex flex-column align-items-center">
+    return <Container className="d-flex align-items-center gap-10 flex-column">
+        
+        <div className="d-flex align-items-start gap-3">
+        <div className="d-flex flex-column align-items-start">
+            
+            <div className="d-flex flex-column akign-item-center">
+            <h1>{name} n°{Pokemon.id} </h1>
+                <img style={{ width: '90%', borderRadius: "10px" }} src={"https://img.pokemondb.net/artwork/" + Pokemon.name + ".jpg"}
+                    alt={"imgchamps" + Pokemon} />
+            </div>
 
-        <h1>Pokemon {name}</h1>
-
-
-
-        <div className="d-flex justify-content-center flex-wrap gap-3">
-            <img style={{ width: '250%' }} src={"https://img.pokemondb.net/artwork/" + Pokemon.name + ".jpg"}
-                alt={"imgchamps" + Pokemon} />
+            
+            <span className="titre">Statistique du Pokemon :</span>
+          
+                {Pokemon.stats && Pokemon.stats.map((stat) => {
+                    return stat.stat.name + " "
+                })}
+                <CanvasJSChart options = {options} 
+				/* onRef={ref => this.chart = ref} */
+			/>
+            
         </div>
-        <h2>Habitat  </h2>
-        <p>{Pokemon.habitat && Pokemon.habitat.name}</p>
 
-        <div className="d-flex">
-            <div className="col-6">
-                <h2>Numéro du Pokemon</h2>
-                <ul>
-                    {Pokemon.id}
-                </ul>
+        <div className="d-flex flex-column col-6 gap-3">
+        {Pokemon.flavor_text_entries && Pokemon.flavor_text_entries[10].flavor_text}
+            <span className="titre">Game Versions :</span>
+            <div className="d-flex flex-wrap gap-3">
+            {Pokemon.game_indices && Pokemon.game_indices.map((indice) => {
+                return  <span className={indice.version.name +" col-2"}> {indice.version.name+" "}</span>
+            })}
             </div>
-            <div className="col-6">
-                <h2>Type du Pokemon</h2>
-                <ul>
-                    {Pokemon.egg_groups && Pokemon.egg_groups.map((group) => {
-                        return <li key={group.name}>{group.name}</li>
-                    })}
-                </ul>
+
+            {/* <div className="d-flex gap-3">
+                
+
+                <div className="col-6">
+                    <span className="titre">Type du Pokemon :</span>
+                    
+                        {Pokemon.egg_groups && Pokemon.egg_groups.map((group) => {
+                            return <li key={group.name}>{group.name}</li>
+                        })}
+                    
+                </div>
+            </div> */}
+
+            
+            <div id="para" className="d-flex justify-content-between flex-wrap gap-3">
+            <div className="d-flex flex-column ">
+            <span className="titre">Taille :</span>
+            {Pokemon.height}
+           
+
+           
+            <span className="titre">Poids :</span>
+            {Pokemon.weight}
+             </div>   
+           <div className="d-flex flex-column " >
+            <span className="titre">Compétences :</span>         
+            {Pokemon.abilities && Pokemon.abilities.map((ability) => {
+                    return ability.ability.name + " "
+            })}
             </div>
+
+            </div>  
+            <span className="titre">Type du Pokemon :</span>
+            <ul>
+                {Pokemon.types && Pokemon.types.map((type) => {
+                    return type.type.name + " "
+                })}
+            </ul>
+
+            
+
+            <span className="titre">Faiblesses :</span>
+            <ul>
+                {Pokemon.damage_relations && Pokemon.damage_relations.double_damage_from.map((damage) => {
+                    return damage.name + " "
+                })}
+            </ul>
+
+            <span className="titre">Fort contre :</span>
+            <ul>
+                {Pokemon.damage_relations && Pokemon.damage_relations.double_damage_to.map((damage) => {
+                    return damage.name + " "
+                })}
+            </ul>
         </div>
-        <h2>Infos</h2>
-        <ul>
-            {Pokemon.flavor_text_entries && Pokemon.flavor_text_entries[0].flavor_text}
-        </ul>
-        {/* <ul>
-            <li>attaque : {Pokemon.info != undefined && Pokemon.info.attack}</li>
-            <li>defense : {Pokemon.info && Pokemon.info.defense}</li>
-            <li>magic : {Pokemon.info && Pokemon.info.magic}</li>
-            <li>difficulté : {Pokemon.info && Pokemon.info.difficulty}</li>
-        </ul>
-        <h2>Passif :</h2>
-        {Pokemon.passive && <>
-            <h3>{Pokemon.passive.name}</h3>
-            <div className="d-flex">
-                <img src={"https://ddragon.leagueoflegends.com/cdn/14.21.1/img/passive/" + Pokemon.passive.image.full} alt="" />
-                <p>{Pokemon.passive.description}</p>
-            </div>
-        </>}
-        {Pokemon.spells && Pokemon.spells.map((spell) => {
-            return <>
-                <h3>{spell.name}</h3>
-                <img src={"https://ddragon.leagueoflegends.com/cdn/14.21.1/img/spell/" + spell.image.full} alt="" />
-                <p>{spell.description}</p>
-            </>
-        })}
-
-        {Pokemon.stats && Object.entries(Pokemon.stats).map((key) => {
-            return <span>{key[0]} ={">"} {key[1]}</span>
-        })} */}
+    </div>
     </Container>;
 
 
