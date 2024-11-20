@@ -16,6 +16,14 @@ function getPokemonByIDBisTwo(name) {
   return axios.get(" https://pokeapi.co/api/v2/type/"+ name)
 };
 
+function getPokemonByType() {
+  return axios.get(" https://pokeapi.co/api/v2/type/")
+};
+
+function getPokemonType(type) {
+  return axios.get(" https://pokeapi.co/api/v2/type/"+ type)
+};
+
 export default {
-  getAllPokemon, getPokemonByID, getPokemonByIDBis, getPokemonByIDBisTwo
+  getAllPokemon, getPokemonByID, getPokemonByIDBis, getPokemonByIDBisTwo, getPokemonByType, getPokemonType
 };

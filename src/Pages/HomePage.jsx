@@ -21,6 +21,7 @@ const HomePage = () => {
             const response = await PokemonService.getAllPokemon();
 
             setPokemon(response.data.results);
+            setFilteredpokemon(response.data.results)
             
         } catch (error) {
             console.log(error);
@@ -33,7 +34,7 @@ const HomePage = () => {
 
     useEffect(() => {
         setFilteredpokemon(Pokemon.filter((pokemon) => {
-            return pokemon[1].name.toLowerCase().includes(searchValue.toLowerCase());
+            return pokemon.name.toLowerCase().includes(searchValue.toLowerCase());
         }))
     }, [searchValue])
 
@@ -46,7 +47,7 @@ const HomePage = () => {
             </Form.Group>
         </Form>
         <div className="d-flex justify-content-center flex-wrap gap-3">
-            {Pokemon.map((pokemon) => {
+            {filteredpokemon.map((pokemon) => {
                 return <PokemonCard pokemonCard={pokemon} key={pokemon.name}></PokemonCard>
             })}
         </div>

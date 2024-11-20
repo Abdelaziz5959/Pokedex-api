@@ -10,35 +10,7 @@ const DetailPokemon = () => {
     const { name } = useParams();
     const [Pokemon, setPokemon] = useState({});
     var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-    const options = {
-        animationEnabled: true,
-        theme: "dark2",
-        title: {
-            text: "Statistique du Pokemon"
-        },
-        axisY: {
-        title: "Active Installations",
-            scaleBreaks: {
-                autoCalculate: true,
-                type: "wavy",
-                lineColor: "white"
-            }
-        },
-        data: [{
-            type: "column",
-            indexLabel: "{y}",		
-            indexLabelFontColor: "white",
-            dataPoints: [
-                {"label":"hp","y":5000000},
-                {"label":"Jetpack","y":4000000},
-                {"label":"WP Super Cache","y":2000000},
-                {"label":"bbPress","y":300000},
-                {"label":"BuddyPress","y":200000},
-                {"label":"Health Check","y":200000}    
-            ]
-        }]
-    }
-
+   
 
     const fectchPokemonByID = async () => {
 
@@ -69,26 +41,47 @@ const DetailPokemon = () => {
 
     console.log(Pokemon);
 
+
+    const options = {
+        animationEnabled: true,
+        theme: "dark2",
+        title: {
+            text: "Statistique du Pokemon"
+        },
+        axisY: {
+            scaleBreaks: {
+                autoCalculate: true,
+                type: "Valeur",
+                includeZero: "true"
+            }
+        },
+        data: [{
+            type: "column",
+            indexLabel: "{y}",		
+            indexLabelFontColor: "white",
+            dataPoints: Pokemon.stats ? Pokemon.stats.map(stat => ({ label: stat.stat.name, y: stat.base_stat })) : [] }]
+        }
+
     return <Container className="d-flex align-items-center gap-10 flex-column">
         
         <div className="d-flex align-items-start gap-3">
         <div className="d-flex flex-column align-items-start">
             
-            <div className="d-flex flex-column akign-item-center">
+            <div className="d-flex flex-column akign-item-center mb-5">
             <h1>{name} n°{Pokemon.id} </h1>
                 <img style={{ width: '90%', borderRadius: "10px" }} src={"https://img.pokemondb.net/artwork/" + Pokemon.name + ".jpg"}
                     alt={"imgchamps" + Pokemon} />
             </div>
 
-            
-            <span className="titre">Statistique du Pokemon :</span>
+{/*             
+            {/* {/* <span className="titre">Statistique du Pokemon :</span>
           
-                {Pokemon.stats && Pokemon.stats.map((stat) => {
+                {/* {Pokemon.stats && Pokemon.stats.map((stat) => {
                     return stat.stat.name + " "
-                })}
+                })} */} 
                 <CanvasJSChart options = {options} 
 				/* onRef={ref => this.chart = ref} */
-			/>
+			/>  
             
         </div>
 
@@ -97,7 +90,7 @@ const DetailPokemon = () => {
             <span className="titre">Game Versions :</span>
             <div className="d-flex flex-wrap gap-3">
             {Pokemon.game_indices && Pokemon.game_indices.map((indice) => {
-                return  <span className={indice.version.name +" col-2"}> {indice.version.name+" "}</span>
+                return  <span className={indice.version.name +" col-2 d-flex  justify-content-center"}> {indice.version.name+" "}</span>
             })}
             </div>
 
@@ -120,15 +113,13 @@ const DetailPokemon = () => {
             <span className="titre">Taille :</span>
             {Pokemon.height}
            
-
-           
             <span className="titre">Poids :</span>
             {Pokemon.weight}
              </div>   
            <div className="d-flex flex-column " >
             <span className="titre">Compétences :</span>         
             {Pokemon.abilities && Pokemon.abilities.map((ability) => {
-                    return ability.ability.name + " "
+                    return <span className={ability.ability.name +" col-2 justify-content-center m-1"}> {ability.ability.name + " "}</span>
             })}
             </div>
 
@@ -136,7 +127,7 @@ const DetailPokemon = () => {
             <span className="titre">Type du Pokemon :</span>
             <ul>
                 {Pokemon.types && Pokemon.types.map((type) => {
-                    return type.type.name + " "
+                    return  <span className={type.type.name +" col-2 justify-content-center m-1"}> {type.type.name + " "}</span>
                 })}
             </ul>
 
@@ -145,14 +136,14 @@ const DetailPokemon = () => {
             <span className="titre">Faiblesses :</span>
             <ul>
                 {Pokemon.damage_relations && Pokemon.damage_relations.double_damage_from.map((damage) => {
-                    return damage.name + " "
+                    return <span className={damage.name +" col-2 justify-content-center m-1"}> {damage.name + " "}</span>
                 })}
             </ul>
 
             <span className="titre">Fort contre :</span>
             <ul>
                 {Pokemon.damage_relations && Pokemon.damage_relations.double_damage_to.map((damage) => {
-                    return damage.name + " "
+                    return <span className={damage.name +" col-2 justify-content-center m-1"}> {damage.name + " "}</span>
                 })}
             </ul>
         </div>
