@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NavBar from './Components/NavBar';
 import DetailPokemon from './Pages/DetailPokemon';
 import TypePage from './Pages/TypePage';
+import GenerationPage from './Pages/GenerationPage';
+import PokemonByVersion from './Pages/PokemonByVersion';
 
 
 
@@ -19,6 +21,8 @@ function App() {
       <Route  path='/' element={<HomePage></HomePage>}> </Route>
       <Route path='/pokemon/:name'element={<DetailPokemon></DetailPokemon>}> </Route>
       <Route path='/type/:type'element={<TypePage></TypePage>}> </Route>
+      <Route path='/generation/:name'element={<GenerationPage></GenerationPage>}> </Route>
+      <Route path='/version/:name'element={<PokemonByVersion></PokemonByVersion>}> </Route>
 
       </Routes>
       </BrowserRouter>

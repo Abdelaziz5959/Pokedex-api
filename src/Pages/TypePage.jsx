@@ -7,10 +7,8 @@ import PokemonCard from "../Components/PokemonCard";
 const TypePage = () => {
 
     const {type} = useParams();
-    const [Pokemons, setPokemons] = useState([]);
-    const [pokemonList, setPokemonList] = useState ([]);
-    const [filteredPokemons, setFilteredPokemons] = useState([])
-
+    const [pokemonList, setPokemonList] = useState ({});
+   
     const fetchpokemontype= async () => {
         try {
             const response = await PokemonService.getPokemonType(type);
@@ -25,14 +23,14 @@ const TypePage = () => {
     // useEffect evite les boucles infini
     useEffect(() => {
         fetchpokemontype()
-    }, [])
+    }, [type])
 
    
 
     return <> <Container className="d-flex flex-column align-items-center">
 
     <div>
-      <h1>Pokémons type </h1>
+      <h1>Pokémons {type} </h1>
       <div>
         {pokemonList.length > 0 ? (
           <div className="d-flex justify-content-center flex-wrap gap-4">

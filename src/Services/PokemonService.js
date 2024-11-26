@@ -17,7 +17,7 @@ function getPokemonByIDBisTwo(name) {
 };
 
 function getPokemonByType() {
-  return axios.get(" https://pokeapi.co/api/v2/type/")
+  return axios.get(" https://pokeapi.co/api/v2/type?limit=50")
 };
 
 function getPokemonType(type) {
